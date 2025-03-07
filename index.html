@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Health Center Nursing Services</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #fafafa;
+    }
+    #pdf-container {
+      max-width: 800px;
+      margin: auto;
+    }
+    canvas {
+      display: block;
+      margin: 10px auto;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Health Center Nursing Services</h1>
+  <div id="pdf-container"></div>
+
+  <!-- PDF.js library from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script>
+    // Set the workerSrc property for PDF.js
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+    // Replace with your raw PDF URL from GitHub
+    const url = 'https://raw.githubusercontent.com/romvio/hc_nursering/refs/heads/main/Medical%20Services%20%C2%B7%20NYUAD%20Students.pdf';
+
+    const container = document.getElementById('pdf-container');
+
+    // Asynchronously load the PDF
+    pdfjsLib.getDocument(url).promise.then(pdf => {
+      // Loop through each page and render it
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        pdf.getPage(pageNum).then(page => {
+          const scale = 1.5; // Adjust scale for readability
+          const viewport = page.getViewport({ scale: scale });
+          
+          // Create a canvas element for this page
+          const canvas = document.createElement('canvas');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          container.appendChild(canvas);
+          
+          const context = canvas.getContext('2d');
+          const renderContext = {
+            canvasContext: context,
+            viewport: viewport
+          };
+          page.render(renderContext);
+        });
+      }
+    }).catch(error => {
+      console.error('Error loading PDF: ', error);
+      container.innerHTML = '<p>Failed to load PDF. Please try again later.</p>';
+    });
+  </script>
+</body>
+</html>
+    (function() {
+      // Simple user-agent checks for iOS Safari
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      
+      if (isIOS && isSafari) {
+        // Hide the embedded PDF <object> if on iOS Safari
+        var pdfObject = document.getElementById('pdfObject');
+        pdfObject.style.display = 'none';
+
+        // Create a fallback message/link
+        var fallbackMessage = document.createElement('div');
+        fallbackMessage.style.padding = '1rem';
+        fallbackMessage.style.textAlign = 'center';
+        fallbackMessage.innerHTML = `
+          <p>
+            Inline PDF viewing is not supported on iOS Safari. 
+            <a href="https://raw.githubusercontent.com/romvio/hc_nursering/refs/heads/main/Medical%20Services%20%C2%B7%20NYUAD%20Students.pdf">
+              Download the PDF
+            </a>
+            instead.
+          </p>
+        `;
+        pdfObject.parentNode.insertBefore(fallbackMessage, pdfObject.nextSibling);
+      }
+    })();
+  </script>
+
+</body>
+</html>
